@@ -1,66 +1,181 @@
-CREATE TABLE STUDENT (regno VARCHAR2(10) PRIMARY KEY, name VARCHAR2(30) NOT NULL, major VARCHAR2(20) NOT NULL, bdate DATE);
+1.student
+-- (i) Create Tables
+CREATE TABLE STUDENT(regno VARCHAR(20) PRIMARY KEY, name VARCHAR(50) NOT NULL, major VARCHAR(50) NOT NULL, bdate DATE);
+CREATE TABLE COURSE(course_no INT PRIMARY KEY, cname VARCHAR(50) NOT NULL, dept VARCHAR(50) NOT NULL);
+CREATE TABLE ENROLL(regno VARCHAR(20), course_no INT, sem INT, marks INT, PRIMARY KEY(regno,course_no), FOREIGN KEY(regno) REFERENCES STUDENT(regno), FOREIGN KEY(course_no) REFERENCES COURSE(course_no));
+CREATE TABLE TEXT(book_isbn INT PRIMARY KEY, book_title VARCHAR(100), publisher VARCHAR(50), author VARCHAR(50));
+CREATE TABLE BOOK_ADOPTION(course_no INT, sem INT, book_isbn INT, PRIMARY KEY(course_no,sem,book_isbn), FOREIGN KEY(course_no) REFERENCES COURSE(course_no), FOREIGN KEY(book_isbn) REFERENCES TEXT(book_isbn));
 
-CREATE TABLE COURSE (course_no INT PRIMARY KEY, cname VARCHAR2(30) NOT NULL, dept VARCHAR2(20) NOT NULL);
+-- (ii) Insert tuples (parameterized)
+INSERT INTO STUDENT VALUES(&regno,&name,&major,&bdate);
+INSERT INTO COURSE VALUES(&course_no,&cname,&dept);
+INSERT INTO ENROLL VALUES(&regno,&course_no,&sem,&marks);
+INSERT INTO TEXT VALUES(&book_isbn,&book_title,&publisher,&author);
+INSERT INTO BOOK_ADOPTION VALUES(&course_no,&sem,&book_isbn);
 
-CREATE TABLE ENROLL (regno VARCHAR2(10), course_no INT, sem INT, marks INT, PRIMARY KEY (regno, course_no, sem), 
-FOREIGN KEY (regno) REFERENCES STUDENT(regno), FOREIGN KEY (course_no) REFERENCES COURSE(course_no));
+-- (iii) Add a new textbook and adopt by a department
+INSERT INTO TEXT VALUES(&book_isbn,&book_title,&publisher,&author);
+INSERT INTO BOOK_ADOPTION VALUES(&course_no,&sem,&book_isbn);
 
-CREATE TABLE TEXT ( book_isbn INT PRIMARY KEY, book_title VARCHAR2(50), publisher VARCHAR2(30), author VARCHAR2(30));
+-- (iv) List textbooks (course_no, book_isbn, book_title) in alphabetical order for Computer Science dept with >2 books
+SELECT C.course_no, T.book_isbn, T.book_title
+FROM COURSE C JOIN BOOK_ADOPTION B ON C.course_no=B.course_no
+JOIN TEXT T ON B.book_isbn=T.book_isbn
+WHERE C.dept='Computer Science'
+GROUP BY C.course_no, T.book_isbn, T.book_title
+HAVING COUNT(T.book_isbn) > 2
+ORDER BY T.book_title ASC;
 
-CREATE TABLE BOOK_ADOPTION (course_no INT, sem INT, book_isbn INT, PRIMARY KEY (course_no, sem, book_isbn),
-    FOREIGN KEY (course_no) REFERENCES COURSE(course_no), FOREIGN KEY (book_isbn) REFERENCES TEXT(book_isbn));
--- STUDENT
-INSERT INTO STUDENT VALUES ('S1', 'Arun', 'CS', '01-JAN-2002');
-INSERT INTO STUDENT VALUES ('S2', 'Bala', 'Math', '10-FEB-2001');
-INSERT INTO STUDENT VALUES ('S3', 'Deepa', 'CS', '15-MAR-2003');
-INSERT INTO STUDENT VALUES ('S4', 'Kumar', 'Physics', '20-APR-2002');
-INSERT INTO STUDENT VALUES ('S5', 'Meena', 'CS', '05-MAY-2001');
-
--- COURSE
-INSERT INTO COURSE VALUES (101, 'DBMS', 'Computer Science');
-INSERT INTO COURSE VALUES (102, 'OS', 'Computer Science');
-INSERT INTO COURSE VALUES (103, 'Algebra', 'Math');
-INSERT INTO COURSE VALUES (104, 'Quantum Physics', 'Physics');
-INSERT INTO COURSE VALUES (105, 'Networks', 'Computer Science');
-
--- ENROLL
-INSERT INTO ENROLL VALUES ('S1', 101, 1, 80);
-INSERT INTO ENROLL VALUES ('S2', 103, 1, 75);
-INSERT INTO ENROLL VALUES ('S3', 101, 1, 90);
-INSERT INTO ENROLL VALUES ('S4', 104, 2, 70);
-INSERT INTO ENROLL VALUES ('S5', 102, 2, 88);
-
--- TEXT
-INSERT INTO TEXT VALUES (201, 'Database Concepts', 'McGraw-Hill', 'Silberschatz');
-INSERT INTO TEXT VALUES (202, 'Operating System Concepts', 'Wiley', 'Galvin');
-INSERT INTO TEXT VALUES (203, 'Algebra Essentials', 'Pearson', 'Johnson');
-INSERT INTO TEXT VALUES (204, 'Computer Networks', 'Pearson', 'Tanenbaum');
-INSERT INTO TEXT VALUES (205, 'Quantum Physics', 'Springer', 'Einstein');
-
--- BOOK_ADOPTION
-INSERT INTO BOOK_ADOPTION VALUES (101, 1, 201);
-INSERT INTO BOOK_ADOPTION VALUES (102, 2, 202);
-INSERT INTO BOOK_ADOPTION VALUES (103, 1, 203);
-INSERT INTO BOOK_ADOPTION VALUES (105, 2, 204);
-INSERT INTO BOOK_ADOPTION VALUES (104, 2, 205);
-
--- New Book
-INSERT INTO TEXT VALUES (206, 'AI Basics', 'OReilly', 'Russell');
-
--- Adopt by DBMS course in CS Dept
-INSERT INTO BOOK_ADOPTION VALUES (101, 1, 206);
+-- (v) Departments with adopted books from a specific publisher
+SELECT DISTINCT C.dept
+FROM COURSE C JOIN BOOK_ADOPTION B ON C.course_no=B.course_no
+JOIN TEXT T ON B.book_isbn=T.book_isbn
+WHERE T.publisher=&publisher;
 
 
-SELECT c.course_no, t.book_isbn, t.book_title
-FROM COURSE c, BOOK_ADOPTION b, TEXT t
-WHERE c.course_no=b.course_no AND b.book_isbn=t.book_isbn
-AND c.dept='Computer Science'
-AND c.course_no IN(SELECT course_no FROM BOOK_ADOPTION GROUP BY course_no HAVING COUNT(*)>2)
-ORDER BY t.book_title;
+
+3.book dealer 
+CREATE TABLE AUTHOR(author_id INT PRIMARY KEY, name VARCHAR(50), city VARCHAR(50), country VARCHAR(50));
+CREATE TABLE PUBLISHER(publisher_id INT PRIMARY KEY, name VARCHAR(50), city VARCHAR(50), country VARCHAR(50));
+CREATE TABLE CATEGORY(category_id INT PRIMARY KEY, description VARCHAR(50));
+CREATE TABLE CATLOG(book_id INT PRIMARY KEY, title VARCHAR(100), author_id INT, publisher_id INT, category INT, year INT, price INT,
+  FOREIGN KEY(author_id) REFERENCES AUTHOR(author_id), FOREIGN KEY(publisher_id) REFERENCES PUBLISHER(publisher_id), FOREIGN KEY(category) REFERENCES CATEGORY(category_id));
+CREATE TABLE ORDER_DETAILS(order_no INT PRIMARY KEY, book_id INT, quantity INT, FOREIGN KEY(book_id) REFERENCES CATLOG(book_id));
+
+INSERT INTO AUTHOR VALUES(&aid,'&name','&city','&country');
+INSERT INTO PUBLISHER VALUES(&pid,'&name','&city','&country');
+INSERT INTO CATEGORY VALUES(&cid,'&desc');
+INSERT INTO CATLOG VALUES(&bid,'&title',&aid,&pid,&cid,&year,&price);
+INSERT INTO ORDER_DETAILS VALUES(&oid,&bid,&qty);
+
+-- (iii)
+SELECT A.name,COUNT(C.book_id) 
+FROM AUTHOR A,CATLOG C 
+WHERE A.author_id=C.author_id AND C.price>(SELECT AVG(price) FROM CATLOG) AND C.year>2010 
+GROUP BY A.name HAVING COUNT(C.book_id)>=2;
+
+-- (iv)
+SELECT A.name 
+FROM AUTHOR A,CATLOG C,ORDER_DETAILS O 
+WHERE A.author_id=C.author_id AND C.book_id=O.book_id 
+GROUP BY A.name HAVING SUM(O.quantity)=(SELECT MAX(SUM(quantity)) FROM ORDER_DETAILS O2,CATLOG C2 WHERE O2.book_id=C2.book_id GROUP BY C2.author_id);
+
+-- (v)
+UPDATE CATLOG SET price=price*1.1 WHERE publisher_id=&pid;
 
 
-SELECT dept, publisher
-FROM COURSE c, BOOK_ADOPTION b, TEXT t
-WHERE c.course_no=b.course_no AND b.book_isbn=t.book_isbn
-GROUP BY dept,publisher
-HAVING COUNT()=(SELECT COUNT() FROM COURSE c1,BOOK_ADOPTION b1 WHERE c1.course_no=b1.course_no AND c1.dept=c.dept);
+4.bank mangement
+-- (i) Create Tables
+CREATE TABLE BRANCH(ifsc VARCHAR(10) PRIMARY KEY, branch_name VARCHAR(50), branch_city VARCHAR(50), assets REAL);
+CREATE TABLE ACCOUNT(accno INT PRIMARY KEY, branch_name VARCHAR(50), balance REAL, FOREIGN KEY(branch_name) REFERENCES BRANCH(branch_name));
+CREATE TABLE DEPOSITOR(accno INT, customer_name VARCHAR(50), PRIMARY KEY(accno, customer_name), FOREIGN KEY(accno) REFERENCES ACCOUNT(accno));
+CREATE TABLE CUSTOMER(accno INT PRIMARY KEY, customer_name VARCHAR(50), customer_street VARCHAR(50), customer_city VARCHAR(50), FOREIGN KEY(accno) REFERENCES ACCOUNT(accno));
+CREATE TABLE LOAN(loan_no INT PRIMARY KEY, branch_name VARCHAR(50), amount REAL, FOREIGN KEY(branch_name) REFERENCES BRANCH(branch_name));
+CREATE TABLE BORROWER(loan_no INT, customer_name VARCHAR(50), PRIMARY KEY(loan_no, customer_name), FOREIGN KEY(loan_no) REFERENCES LOAN(loan_no));
+
+-- (ii) Insert tuples
+INSERT INTO BRANCH VALUES(&ifsc,&branch_name,&branch_city,&assets);
+INSERT INTO ACCOUNT VALUES(&accno,&branch_name,&balance);
+INSERT INTO DEPOSITOR VALUES(&accno,&customer_name);
+INSERT INTO CUSTOMER VALUES(&accno,&customer_name,&customer_street,&customer_city);
+INSERT INTO LOAN VALUES(&loan_no,&branch_name,&amount);
+INSERT INTO BORROWER VALUES(&loan_no,&customer_name);
+
+-- (iii) Customers with ≥2 accounts at main branch
+SELECT customer_name FROM DEPOSITOR D, ACCOUNT A WHERE D.accno=A.accno AND A.branch_name='Main' GROUP BY customer_name HAVING COUNT(D.accno)>=2;
+
+-- (iv) Customers with accounts at all branches in a city
+SELECT customer_name FROM DEPOSITOR D, ACCOUNT A, BRANCH B WHERE D.accno=A.accno AND A.branch_name=B.branch_name AND B.branch_city='SpecificCity' GROUP BY customer_name HAVING COUNT(DISTINCT B.branch_name)=(SELECT COUNT(branch_name) FROM BRANCH WHERE branch_city='SpecificCity');
+
+-- (v) Delete all accounts in branches of a city
+DELETE FROM ACCOUNT WHERE branch_name IN (SELECT branch_name FROM BRANCH WHERE branch_city='SpecificCity');
+
+
+5.order processing dbms
+-- (i) Create Tables
+CREATE TABLE CUSTOMER(custno INT PRIMARY KEY, cname VARCHAR(50), city VARCHAR(50));
+CREATE TABLE ORDERS(orderno INT PRIMARY KEY, odate DATE, ord_amt REAL, custno INT, FOREIGN KEY(custno) REFERENCES CUSTOMER(custno));
+CREATE TABLE ITEM(itemno INT PRIMARY KEY, unitprice REAL);
+CREATE TABLE ORDER_ITEM(orderno INT, itemno INT, qty INT, PRIMARY KEY(orderno,itemno), FOREIGN KEY(orderno) REFERENCES ORDERS(orderno), FOREIGN KEY(itemno) REFERENCES ITEM(itemno));
+CREATE TABLE WAREHOUSE(warehouseno INT PRIMARY KEY, city VARCHAR(50));
+CREATE TABLE SHIPMENT(orderno INT, warehouseno INT, ship_date DATE, PRIMARY KEY(orderno,warehouseno), FOREIGN KEY(orderno) REFERENCES ORDERS(orderno), FOREIGN KEY(warehouseno) REFERENCES WAREHOUSE(warehouseno));
+
+-- (ii) Insert tuples (parameterized)
+INSERT INTO CUSTOMER VALUES(&custno,&cname,&city);
+INSERT INTO ORDERS VALUES(&orderno,&odate,&ord_amt,&custno);
+INSERT INTO ITEM VALUES(&itemno,&unitprice);
+INSERT INTO ORDER_ITEM VALUES(&orderno,&itemno,&qty);
+INSERT INTO WAREHOUSE VALUES(&warehouseno,&city);
+INSERT INTO SHIPMENT VALUES(&orderno,&warehouseno,&ship_date);
+
+-- (iii) List order no and ship date for orders shipped from a warehouse
+SELECT orderno, ship_date FROM SHIPMENT WHERE warehouseno=&warehouseno;
+
+-- (iv) Customer details with no. of orders and avg order amount
+SELECT C.custno, C.cname, COUNT(O.orderno) AS no_of_orders, AVG(O.ord_amt) AS avg_order_amt
+FROM CUSTOMER C JOIN ORDERS O ON C.custno=O.custno
+GROUP BY C.custno, C.cname;
+
+-- (v) Orders not shipped within 30 days of ordering
+SELECT O.orderno, O.odate, S.ship_date
+FROM ORDERS O JOIN SHIPMENT S ON O.orderno=S.orderno
+WHERE DATEDIFF(day,O.odate,S.ship_date) > 30;
+
+
+6.insurance database mangement 
+-- (i) Create Tables
+CREATE TABLE PERSON(driver_idno VARCHAR(20) PRIMARY KEY, name VARCHAR(50) NOT NULL, address VARCHAR(100));
+CREATE TABLE CAR(regno VARCHAR(20) PRIMARY KEY, model VARCHAR(50), year INT);
+CREATE TABLE ACCIDENT(report_no INT PRIMARY KEY, adate DATE, location VARCHAR(100));
+CREATE TABLE OWNS(driver_idno VARCHAR(20), regno VARCHAR(20), PRIMARY KEY(driver_idno,regno), FOREIGN KEY(driver_idno) REFERENCES PERSON(driver_idno), FOREIGN KEY(regno) REFERENCES CAR(regno));
+CREATE TABLE PARTICIPATED(driver_idno VARCHAR(20), regno VARCHAR(20), report_no INT, damage_amount INT, PRIMARY KEY(driver_idno,regno,report_no), FOREIGN KEY(driver_idno) REFERENCES PERSON(driver_idno), FOREIGN KEY(regno) REFERENCES CAR(regno), FOREIGN KEY(report_no) REFERENCES ACCIDENT(report_no));
+
+-- (ii) Insert tuples (parameterized)
+INSERT INTO PERSON VALUES(&driver_idno,&name,&address);
+INSERT INTO CAR VALUES(&regno,&model,&year);
+INSERT INTO ACCIDENT VALUES(&report_no,&adate,&location);
+INSERT INTO OWNS VALUES(&driver_idno,&regno);
+INSERT INTO PARTICIPATED VALUES(&driver_idno,&regno,&report_no,&damage_amount);
+
+-- (iii-a) Update damage cost for accident report_no=12
+UPDATE PARTICIPATED SET damage_amount=25000 WHERE report_no=12 AND regno=&regno;
+
+-- (iii-b) Insert a new accident
+INSERT INTO ACCIDENT VALUES(&report_no,&adate,&location);
+
+-- (iv) Total number of people owning cars in accidents (2022)
+SELECT COUNT(DISTINCT P.driver_idno) AS total_people
+FROM PARTICIPATED P JOIN ACCIDENT A ON P.report_no=A.report_no
+WHERE YEAR(A.adate)=2022;
+
+-- (v) Number of accidents for cars of a specific model
+SELECT COUNT(DISTINCT A.report_no) AS total_accidents
+FROM ACCIDENT A JOIN PARTICIPATED P ON A.report_no=P.report_no
+JOIN CAR C ON P.regno=C.regno
+WHERE C.model=&model;
+
+
+0.built in function 
+-- NUMBER FUNCTIONS
+SELECT ABS(-25) AS AbsVal, ROUND(123.456,2) AS Rounded, CEIL(12.3) AS CeilVal, FLOOR(12.9) AS FloorVal, MOD(15,4) AS ModVal;
+
+-- DATE FUNCTIONS
+SELECT CURRENT_DATE AS Today, CURRENT_TIMESTAMP AS NowTime,
+       DATEADD(DAY,10,'2023-01-01') AS Plus10Days,
+       DATEDIFF(DAY,'2023-01-01','2023-01-20') AS DiffDays,
+       YEAR('2023-12-25') AS ExtractYear;
+
+-- COUNT / AGGREGATE FUNCTIONS
+SELECT COUNT(*) AS TotalStudents FROM STUDENT;
+SELECT COUNT(DISTINCT dept) AS UniqueDepts FROM COURSE;
+SELECT SUM(ord_amt) AS TotalAmount FROM ORDERS;
+SELECT AVG(marks) AS AvgMarks FROM ENROLL;
+SELECT MIN(marks) AS MinMarks, MAX(marks) AS MaxMarks FROM ENROLL;
+
+-- CHARACTER FUNCTIONS
+SELECT UPPER('hello') AS UpperCase, LOWER('WORLD') AS LowerCase,
+       LENGTH('Database') AS StrLength,
+       SUBSTRING('Database',1,4) AS SubStr,
+       CONCAT('SQL',' Functions') AS FullText,
+       LTRIM('   SQL') AS LeftTrim, RTRIM('SQL   ') AS RightTrim;
+
