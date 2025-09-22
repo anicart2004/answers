@@ -1,0 +1,66 @@
+CREATE TABLE STUDENT (regno VARCHAR2(10) PRIMARY KEY, name VARCHAR2(30) NOT NULL, major VARCHAR2(20) NOT NULL, bdate DATE);
+
+CREATE TABLE COURSE (course_no INT PRIMARY KEY, cname VARCHAR2(30) NOT NULL, dept VARCHAR2(20) NOT NULL);
+
+CREATE TABLE ENROLL (regno VARCHAR2(10), course_no INT, sem INT, marks INT, PRIMARY KEY (regno, course_no, sem), 
+FOREIGN KEY (regno) REFERENCES STUDENT(regno), FOREIGN KEY (course_no) REFERENCES COURSE(course_no));
+
+CREATE TABLE TEXT ( book_isbn INT PRIMARY KEY, book_title VARCHAR2(50), publisher VARCHAR2(30), author VARCHAR2(30));
+
+CREATE TABLE BOOK_ADOPTION (course_no INT, sem INT, book_isbn INT, PRIMARY KEY (course_no, sem, book_isbn),
+    FOREIGN KEY (course_no) REFERENCES COURSE(course_no), FOREIGN KEY (book_isbn) REFERENCES TEXT(book_isbn));
+-- STUDENT
+INSERT INTO STUDENT VALUES ('S1', 'Arun', 'CS', '01-JAN-2002');
+INSERT INTO STUDENT VALUES ('S2', 'Bala', 'Math', '10-FEB-2001');
+INSERT INTO STUDENT VALUES ('S3', 'Deepa', 'CS', '15-MAR-2003');
+INSERT INTO STUDENT VALUES ('S4', 'Kumar', 'Physics', '20-APR-2002');
+INSERT INTO STUDENT VALUES ('S5', 'Meena', 'CS', '05-MAY-2001');
+
+-- COURSE
+INSERT INTO COURSE VALUES (101, 'DBMS', 'Computer Science');
+INSERT INTO COURSE VALUES (102, 'OS', 'Computer Science');
+INSERT INTO COURSE VALUES (103, 'Algebra', 'Math');
+INSERT INTO COURSE VALUES (104, 'Quantum Physics', 'Physics');
+INSERT INTO COURSE VALUES (105, 'Networks', 'Computer Science');
+
+-- ENROLL
+INSERT INTO ENROLL VALUES ('S1', 101, 1, 80);
+INSERT INTO ENROLL VALUES ('S2', 103, 1, 75);
+INSERT INTO ENROLL VALUES ('S3', 101, 1, 90);
+INSERT INTO ENROLL VALUES ('S4', 104, 2, 70);
+INSERT INTO ENROLL VALUES ('S5', 102, 2, 88);
+
+-- TEXT
+INSERT INTO TEXT VALUES (201, 'Database Concepts', 'McGraw-Hill', 'Silberschatz');
+INSERT INTO TEXT VALUES (202, 'Operating System Concepts', 'Wiley', 'Galvin');
+INSERT INTO TEXT VALUES (203, 'Algebra Essentials', 'Pearson', 'Johnson');
+INSERT INTO TEXT VALUES (204, 'Computer Networks', 'Pearson', 'Tanenbaum');
+INSERT INTO TEXT VALUES (205, 'Quantum Physics', 'Springer', 'Einstein');
+
+-- BOOK_ADOPTION
+INSERT INTO BOOK_ADOPTION VALUES (101, 1, 201);
+INSERT INTO BOOK_ADOPTION VALUES (102, 2, 202);
+INSERT INTO BOOK_ADOPTION VALUES (103, 1, 203);
+INSERT INTO BOOK_ADOPTION VALUES (105, 2, 204);
+INSERT INTO BOOK_ADOPTION VALUES (104, 2, 205);
+
+-- New Book
+INSERT INTO TEXT VALUES (206, 'AI Basics', 'OReilly', 'Russell');
+
+-- Adopt by DBMS course in CS Dept
+INSERT INTO BOOK_ADOPTION VALUES (101, 1, 206);
+
+
+SELECT c.course_no, t.book_isbn, t.book_title
+FROM COURSE c, BOOK_ADOPTION b, TEXT t
+WHERE c.course_no=b.course_no AND b.book_isbn=t.book_isbn
+AND c.dept='Computer Science'
+AND c.course_no IN(SELECT course_no FROM BOOK_ADOPTION GROUP BY course_no HAVING COUNT(*)>2)
+ORDER BY t.book_title;
+
+
+SELECT dept, publisher
+FROM COURSE c, BOOK_ADOPTION b, TEXT t
+WHERE c.course_no=b.course_no AND b.book_isbn=t.book_isbn
+GROUP BY dept,publisher
+HAVING COUNT()=(SELECT COUNT() FROM COURSE c1,BOOK_ADOPTION b1 WHERE c1.course_no=b1.course_no AND c1.dept=c.dept);
