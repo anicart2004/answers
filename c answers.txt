@@ -1,0 +1,1419 @@
+LINKED LIST
+#include <stdio.h>
+#include <stdlib.h>
+// Structure for the linked list
+typedef struct ListType
+{
+int Data;
+struct ListType *Next;
+} LISTNODE;
+// Global variable
+LISTNODE *Head;
+// Function Prototyes
+void Initialize();
+void Menu(int *choice);
+void InputNode(int num);
+void PrintList(LISTNODE *Head);
+int DeleteFirstNode();
+int DeleteLastNode();
+int SearchNum(int num);
+int Maximum(LISTNODE *Head);
+int DeleteNode(int num);
+int main()
+{
+int n, num, i, choice;
+Initialize();
+Menu(&choice);
+while (1)
+{
+switch (choice)
+{
+case 1:
+printf("Enter the value of n:");
+scanf("%d", &n);
+printf("Enter %d elements:", n);
+for (i = 0; i < n; i++)
+{
+scanf("%d", &num);
+InputNode(num);
+}
+break;
+case 2:
+PrintList(Head);
+break;
+case 3:
+{
+int result = DeleteFirstNode();
+if(result == -1){
+printf("Done");
+break;
+}
+printf("Deleting the first node:%d", result);
+break;
+}
+case 4:
+{
+int result2 = DeleteLastNode();
+if(result2 == -1){
+printf("Done");
+break;
+}
+printf("Deleting the last node:%d", result2);
+break;
+}
+case 5:
+PrintList(Head);
+break;
+case 6:
+{
+int max = Maximum(Head);
+if(max == -1){
+printf("Done");
+break;
+}
+printf("The maximum number is:%d", max);
+break;
+}
+case 7:
+printf("Enter the number you want to search:");
+scanf("%d", &num);
+if (SearchNum(num))
+{
+printf("%d found", num);
+}
+else
+{
+printf("%d not found.", num);
+}
+break;
+case 8:
+{
+int result3;
+printf("Enter the number you want to delete:");
+scanf("%d", &num);
+result3 = DeleteNode(num);
+if(result3 == -1){
+printf("Done");
+break;
+}
+printf("The deleted number:%d", result3);
+break;
+}
+case 9:
+exit(0);
+default:
+printf("Invalid Choice");
+}
+Menu(&choice);
+}
+return 0;
+}
+void Menu(int *choice)
+{
+printf("\n_____MENU DRIVEN____\n");
+printf("1.Input numbers:\n");
+printf("2.Print the list:\n");
+printf("3.Delete the first node:\n");
+printf("4.Delete the last node:\n");
+printf("5.Display List:\n");
+printf("6.Find the maximum number:\n");
+printf("7.Search for a number:\n");
+printf("8.Delete any number:\n");
+printf("9.EXIT\n");
+printf("Enter the choice:");
+scanf("%d", choice);
+}
+// function to initialize list
+void Initialize()
+{
+Head = NULL;
+}
+// Function to input nodes
+void InputNode(int num)
+{
+LISTNODE *Node, *Curr;
+Node = (LISTNODE *)malloc(sizeof(LISTNODE));
+Node->Data = num;
+Node->Next = NULL;
+// CASE 1
+if (Head == NULL)
+{
+Head = Node;
+return;
+}
+// CASE 2
+Curr = Head;
+while (Curr->Next != NULL)
+{
+Curr = Curr->Next;
+}
+Curr->Next = Node;
+}
+// fucntion to display the list
+void PrintList(LISTNODE *Head)
+{
+LISTNODE *Curr;
+Curr = Head;
+// CASE 1 Indicate if no list exists
+if (Head == NULL)
+{
+printf("No list exists");
+return;
+}
+while (Curr != NULL)
+{
+printf("%d\t", Curr->Data);
+Curr = Curr->Next;
+}
+}
+int DeleteFirstNode()
+{
+LISTNODE *Curr;
+int num;
+if (Head == NULL)
+{
+printf("No list exists.");
+return -1;
+}
+Curr = Head;
+Head = Head->Next;
+num = Curr->Data;
+free(Curr);
+return num;
+}
+int DeleteLastNode()
+{
+LISTNODE *Curr, *Prev;
+int num;
+if (Head == NULL)
+{
+printf("No list exists.");
+return -1;
+}
+Curr = Head;
+while (Curr->Next != NULL)
+{
+Prev = Curr;
+Curr = Curr->Next;
+}
+Prev->Next = NULL;
+num = Curr->Data;
+free(Curr);
+return num;
+}
+int SearchNum(int num)
+{
+LISTNODE *Curr;
+Curr = Head;
+if (Head == NULL)
+{
+printf("No list exists.");
+return 0;
+}
+while (Curr != NULL)
+{
+if (num == Curr->Data)
+{
+return 1;
+}
+Curr = Curr->Next;
+}
+return 0;
+}
+int Maximum(LISTNODE *Head)
+{
+LISTNODE *Curr;
+int num;
+Curr = Head;
+int Max = Head->Data;
+if (Head == NULL)
+{
+printf("No list exists.");
+return -1;
+}
+while (Curr-> Next != NULL)
+{
+Curr = Curr->Next;
+if (Curr->Data > Max)
+{
+Max = Curr->Data;
+}
+}
+return Max;
+}
+int DeleteNode(int num)
+{
+LISTNODE *Curr, *Prev;
+// CASE 1 If no list exists
+if (Head == NULL)
+{
+printf("No list exists");
+return -1;
+}
+// CASE 2 If num to be deleted is the head then make the next node as the Head
+if (num == Head->Data)
+{
+Curr = Head;
+Head = Head->Next;
+free(Curr);
+return num;
+}
+// CASE 3 Thaverse the list to come to the loaction of the node that has to be deleted
+Curr = Head;
+while (Curr != NULL)
+{
+if (num == Curr->Data)
+{
+Prev->Next = Curr->Next;
+free(Curr);
+return num;
+}
+Prev = Curr;
+Curr = Curr->Next;
+}
+printf("%d not Found", num);
+}
+ORDERED LINKED LIST
+/*------------------------------------------
+Menu_Driven_OrderedList.c
+A program to implement menu driven program for ordered List
+7/7/25
+----------------------------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+typedef struct ListType
+{
+int Data;
+struct ListType *Next;
+} LISTNODE;
+LISTNODE *Head;
+/*------Function Prototype-------*/
+void InitList();
+void InsertList(int num);
+void PrintList(LISTNODE *Head);
+void DeleteListNode(int num);
+void ReverseList();
+void Menu(int *choice);
+void main()
+{
+int i ,n, num, choice;
+InitList();
+Menu(&choice);
+while (choice)
+{
+switch (choice)
+{
+case 1:
+printf("Enter the value of n:");
+scanf("%d", &n);
+printf("Enter the elements:");
+for (i = 0; i < n; i++)
+{
+scanf("%d", &num);
+InsertList(num);
+}
+break;
+case 2:
+printf("Ordered List:");
+PrintList(Head);
+break;
+case 3:
+ReverseList();
+printf("List reversed.\n");
+PrintList(Head);
+break;
+case 4:
+printf("\nEnter the number to be deleted:");
+scanf("%d", &num);
+DeleteListNode(num);
+printf("After deleting:");
+PrintList(Head);
+break;
+case 5:
+exit(0);
+default:
+printf("Invalid Choice.");
+}
+Menu(&choice);
+}
+}
+void Menu(int *choice)
+{
+printf("\nMENU DRIVEN PROGRAM");
+printf("\n1.Enter the elements");
+printf("\n2.Display the elements");
+printf("\n3.Reverse the list");
+printf("\n4.Delete the element");
+printf("\n5.Exit");
+printf("\nEnter your choice: ");
+scanf("%d", choice);
+}
+// Function to Initialize the Head of the list to null
+void InitList()
+{
+Head = NULL;
+}
+// Function to insert the numbers into the list
+void InsertList(int num)
+{
+LISTNODE *Curr, *Prev, *Node;
+Node = (LISTNODE *)malloc(sizeof(LISTNODE));
+Node->Data = num;
+Node->Next = NULL;
+if (Head == NULL)
+{
+Head = Node;
+return;
+}
+if (num <= Head->Data)
+{
+Node->Next = Head;
+Head = Node;
+return;
+}
+Curr = Head;
+while (Curr && num > Curr->Data)
+{
+Prev = Curr;
+Curr = Curr->Next;
+}
+Prev->Next = Node;
+Node->Next = Curr;
+return;
+}
+/*Function to delete a node from the list*/
+void DeleteListNode(int num)
+{
+LISTNODE *Curr, *Prev;
+if (Head == NULL)
+{
+printf("No list exists");
+return;
+}
+if (num == Head->Data)
+{
+Curr = Head;
+Head = Head->Next;
+free(Curr);
+return;
+}
+Curr = Head;
+while (Curr != NULL)
+{
+if (num == Curr->Data)
+{
+Prev->Next = Curr->Next;
+free(Curr);
+return;
+}
+Prev = Curr;
+Curr = Curr->Next;
+}
+printf("%d not Found", num);
+}
+/*Function to print/display the content of the linked list*/
+void PrintList(LISTNODE *Head)
+{
+LISTNODE *Curr;
+Curr = Head;
+if (Head == NULL)
+{
+printf("No list exists");
+return;
+}
+while (Curr != NULL)
+{
+printf("%d\t", Curr->Data);
+Curr = Curr->Next;
+}
+printf("\n");
+}
+/* Function to reverse the list */
+void ReverseList()
+{
+LISTNODE *Prev = NULL, *Curr = Head, *Next = NULL;
+while (Curr != NULL)
+{
+Next = Curr->Next;
+Curr->Next = Prev;
+Prev = Curr;
+Curr = Next;
+}
+Head = Prev;
+}
+QUEUE
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct QType
+{
+int Data;
+struct QType *Next;
+}QUEUENODE;
+QUEUENODE *Front=NULL, *Rear=NULL;
+void Menu(int *choice);
+void Enqueue(int num);
+int Dequeue();
+void Display(QUEUENODE *Front);
+void InitQueue();
+int main()
+{
+int n , num , choice;
+InitQueue();
+Menu(&choice);
+while(1){
+switch(choice){
+case 1:{
+int i;
+printf("Enter the value of n:");
+scanf("%d" , &n);
+printf("Enter %d Values:", n);
+for(i = 0 ; i<n ; i++){
+scanf("%d" , &num);
+Enqueue(num);
+}
+break;
+}
+case 2:{
+int del_no = Dequeue();
+if(del_no == -1){
+printf("");
+}
+printf("%d deleted\n" , del_no);
+break;
+}
+case 3:
+printf("The elements are:");
+Display(Front);
+break;
+case 4:
+printf("Exiting...");
+exit(0);
+default:
+printf("invalid choice");
+}
+Menu(&choice);
+}
+return 0;
+}
+void InitQueue(){
+Front = NULL;
+Rear = NULL;
+}
+void Menu(int *choice){
+printf("1.Enqueue:\n");
+printf("2.Dequeue:\n");
+printf("3.Display:\n");
+printf("4.Exit\n");
+printf("Enter your choice:");
+scanf("%d" , choice);
+}
+void Enqueue(int num){
+QUEUENODE *Node , *Curr;
+Node = (QUEUENODE*)malloc(sizeof(QUEUENODE));
+Node->Data = num;
+Node->Next = NULL;
+if(Front == NULL){
+Front = Node;
+Rear = Node;
+return;
+}
+Rear->Next=Node;
+Rear = Node;
+}
+int Dequeue(){
+QUEUENODE *Curr;
+int num;
+if(Front == NULL){
+printf("No Queue");
+return -1;
+}
+if(Front->Next == NULL){
+Curr = Front;
+num = Curr->Data;
+free(Curr);
+Front = Rear = NULL;
+return num;
+}
+Curr = Front;
+Front = Front->Next;
+num = Curr->Data;
+free(Curr);
+return num;
+}
+void Display(QUEUENODE *Front){
+QUEUENODE *Curr;
+if(Front == NULL){
+printf("No Queue");
+return;
+}
+Curr = Front;
+while(Curr){
+printf("%d\t" , Curr->Data);
+Curr = Curr->Next;
+}
+printf("\n");
+}
+CIRCULAR QUEUE
+/*-----------------------------------
+CirQueue.c
+A program to implement menu driven for queue
+----------------------------------------------*/
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct CirQueType{
+int Data;
+struct CirQueType *Next;
+}CIRQUEUENODE;
+CIRQUEUENODE *Front = NULL , *Rear = NULL;
+void Menu(int *choice);
+void Initialize();
+void Enqueue(int num);
+int Dequeue();
+void Display(CIRQUEUENODE *Front);
+int main()
+{
+int n , num , i , choice;
+Initialize();
+Menu(&choice);
+while(1){
+switch(choice){
+case 1:
+printf("Enter the value of n:");
+scanf("%d" , &n);
+printf("Enter %d elements:",n);
+for(i=0;i<n;i++){
+scanf("%d" , &num);
+Enqueue(num);
+}
+break;
+case 2:{
+int del_no = Dequeue();
+if(del_no == -1){
+printf("No Queue");
+break;
+}
+printf("%d is deleted\n",del_no);
+break;
+}
+case 3:
+printf("The elements are:");
+Display(Front);
+break;
+case 4:
+printf("Exiting..");
+exit(0);
+default:
+printf("Invalid Choice");
+}
+Menu(&choice);
+}
+return 0;
+}
+void Menu(int *choice){
+printf("1.Enqueue:\n");
+printf("2.Dequeue:\n");
+printf("3.Display:\n");
+printf("4.Exit\n");
+printf("Enter your choice:");
+scanf("%d" , choice);
+}
+void Initialize(){
+Front = NULL;
+Rear = NULL;
+}
+void Enqueue(int num){
+CIRQUEUENODE *Node;
+Node = (CIRQUEUENODE*)malloc(sizeof(CIRQUEUENODE));
+Node->Data=num;
+Node->Next=NULL;
+if(Front == NULL){
+Front = Node;
+Rear = Node;
+return;
+}
+Rear->Next=Node;
+Rear = Node;
+Rear->Next=Front;
+}
+int Dequeue(){
+CIRQUEUENODE *Curr;
+int num;
+if(Front == NULL){
+printf("No Queue");
+return -1;
+}
+if(Front == Rear){
+num = Front->Data;
+Front = Rear = NULL;
+return num;
+}
+Curr = Front;
+Front = Front->Next;
+num = Curr->Data;
+free(Curr);
+Rear->Next=Front;
+return num;
+}
+void Display(CIRQUEUENODE *Front){
+CIRQUEUENODE *Curr;
+if(Front == NULL){
+printf("No Queue");
+return;
+}
+Curr=Front;
+do{
+printf("%d\t" , Curr->Data);
+Curr = Curr->Next;
+}
+while(Curr!=Front);
+printf("\n");
+}
+BINARY SEARCH TREE
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+int data;
+struct Node *left, *right;
+};
+// Function to create a new node
+struct Node* createNode(int value) {
+struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+newNode->data = value;
+newNode->left = newNode->right = NULL;
+return newNode;
+}
+// Insert into BST
+struct Node* insert(struct Node* root, int value) {
+if (root == NULL)
+return createNode(value);
+if (value < root->data)
+root->left = insert(root->left, value);
+else if (value > root->data)
+root->right = insert(root->right, value);
+return root;
+}
+// Inorder Traversal (Left, Root, Right)
+void inorder(struct Node* root) {
+if (root != NULL) {
+inorder(root->left);
+printf("%d ", root->data);
+inorder(root->right);
+}
+}
+// Preorder Traversal (Root, Left, Right)
+void preorder(struct Node* root) {
+if (root != NULL) {
+printf("%d ", root->data);
+preorder(root->left);
+preorder(root->right);
+}
+}
+// Postorder Traversal (Left, Right, Root)
+void postorder(struct Node* root) {
+if (root != NULL) {
+postorder(root->left);
+postorder(root->right);
+printf("%d ", root->data);
+}
+}
+// Search in BST
+struct Node* search(struct Node* root, int key) {
+if (root == NULL || root->data == key)
+return root;
+if (key < root->data)
+return search(root->left, key);
+return search(root->right, key);
+}
+// Display leaf nodes
+void displayLeafNodes(struct Node* root) {
+if (root != NULL) {
+if (root->left == NULL && root->right == NULL)
+printf("%d ", root->data);
+displayLeafNodes(root->left);
+displayLeafNodes(root->right);
+}
+}
+// Check if node is leaf
+void checkLeaf(struct Node* root, int key) {
+struct Node* node = search(root, key);
+if (node == NULL) {
+printf("%d not found in BST\n", key);
+} else if (node->left == NULL && node->right == NULL) {
+printf("%d is a leaf node\n", key);
+} else {
+printf("%d is not a leaf node\n", key);
+}
+}
+// Main Menu
+int main() {
+struct Node* root = NULL;
+int choice, value;
+while (1) {
+printf("\n--- Binary Search Tree Menu ---\n");
+printf("1. Insert a number\n");
+printf("2. Inorder Traversal\n");
+printf("3. Postorder Traversal\n");
+printf("4. Preorder Traversal\n");
+printf("5. Search for a number\n");
+printf("6. Display all Leaf Nodes\n");
+printf("7. Search and check if Leaf Node\n");
+printf("8. Exit\n");
+printf("Enter your choice: ");
+scanf("%d", &choice);
+switch (choice) {
+case 1:
+printf("Enter how many numbers you want to insert: ");
+int n, i;
+scanf("%d", &n);
+printf("Enter %d numbers: ", n);
+for (i = 0; i < n; i++) {
+scanf("%d", &value);
+root = insert(root, value);
+}
+break;
+case 2:
+printf("Inorder Traversal: ");
+inorder(root);
+printf("\n");
+break;
+case 3:
+printf("Postorder Traversal: ");
+postorder(root);
+printf("\n");
+break;
+case 4:
+printf("Preorder Traversal: ");
+preorder(root);
+printf("\n");
+break;
+case 5:
+printf("Enter number to search: ");
+scanf("%d", &value);
+if (search(root, value) != NULL)
+printf("%d found in BST\n", value);
+else
+printf("%d not found in BST\n", value);
+break;
+case 6:
+printf("Leaf Nodes: ");
+displayLeafNodes(root);
+printf("\n");
+break;
+case 7:
+printf("Enter number to check if leaf: ");
+scanf("%d", &value);
+checkLeaf(root, value);
+break;
+case 8:
+exit(0);
+default:
+printf("Invalid choice!\n");
+}
+}
+return 0;
+}
+STACK
+/*---------------------------------------------
+Stack.c
+A program to implement the working of stack
+----------------------------------------------*/
+#include<stdio.h>
+#include<stdlib.h>
+#define SIZE 10
+typedef struct StackType{
+int A[SIZE];
+int Top;
+}STACK;
+STACK S;
+/*---Function Prototypes---*/
+void InitStack();
+void Menu(int *choice);
+void Push(int num);
+int Pop();
+void Display();
+int main()
+{
+int i , n , choice , num , popped;
+printf("MENU DRIVEN FOR STACK");
+InitStack();
+Menu(&choice);
+while(choice){
+switch(choice){
+case 1:
+printf("Enter the value of n:");
+scanf("%d" , &n);
+printf("Enter the elements:");
+for(i=0 ; i<n ; i++){
+scanf("%d" , &num);
+Push(num);
+}
+break;
+case 2:
+popped = Pop();
+if(popped == -1){
+printf("No Stack");
+break;
+}
+printf("%d is popped\n" , popped);
+break;
+case 3:
+Display();
+break;
+case 4:
+exit(1);
+default:
+printf("Invalid Choice");
+}
+Menu(&choice);
+}
+}
+void InitStack(){
+S.Top = -1;
+}
+void Push(int num){
+if(S.Top == SIZE-1){
+printf("Stack is full");
+return;
+}else{
+S.Top++;
+S.A[S.Top] = num;
+return;
+}
+}
+int Pop(){
+int num;
+if(S.Top == -1){
+printf("Stack Empty");
+return -1;
+}else{
+num = S.A[S.Top];
+S.Top--;
+return num;
+}
+}
+void Display(){
+int i;
+if(S.Top == -1){
+printf("Stack Empty");
+return;
+}else{
+printf("Stack elements: ");
+for (i = S.Top; i >= 0; i--){
+printf("%d\t", S.A[i]);
+}
+printf("\n");
+}
+}
+void Menu(int *choice){
+printf("\n1.Push:\n2.Pop:\n3.Display:\n4.Exit\nEnter your choice:");
+scanf("%d" , choice);
+}
+REVERSE STRING
+/*--------------------------------------------------------
+reversestring.c
+A program to reverse a string
+A carl10 britto
+-------------------------------------------------------*/
+#include<math.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<ctype.h>
+#include<string.h>
+#define MAXNUM 20
+typedef struct Stack{
+int Top;
+float Oprnd[MAXNUM];
+}STACK;
+STACK S;
+void Push (char C);
+char Pop ();
+void InitStack();
+int StackEmpty();
+int main()
+{ char rev[20];
+int i,len;
+char str[40];
+printf("Enter a string\n");
+scanf("%s",str);
+len=strlen(str);
+InitStack();
+for(i=0;i<len;i++){
+Push(str[i]);
+}
+for(i=0;i<len;i++){
+rev[i]=Pop();
+}
+printf("%s",rev);
+return 0;
+}
+void Push(char C)
+{
+if(S.Top == MAXNUM-1){
+printf("\nSTACK IS FULL\n");
+}else{
+S.Top++;
+S.Oprnd[S.Top] = C;
+}
+}
+//-------Pop-----------
+char Pop()
+{
+char c;
+if(S.Top == 0){
+printf("\nSTACK IS EMPTY\n");
+}else{
+c = S.Oprnd[S.Top];
+S.Top--;
+return c;
+}
+}
+//------InitStack------
+void InitStack()
+{
+S.Top == 0;
+}
+FIBONACCI
+#include<stdio.h>
+#include<stdlib.h>
+#define SIZE 20
+typedef struct StackType{
+int Fib[SIZE];
+int Top;
+}STACK;
+STACK S;
+//Function Prototypes
+void Push(int Fib);
+int Pop();
+void InitStack();
+void Display();
+int main()
+{
+int i , n, F1 = 0 , F2 = 1 , F3;
+printf("Enter the value of n:");
+scanf("%d" , &n);
+InitStack();
+Push(F1);
+Push(F2);
+i = 1;
+while(i < n){
+F2 = Pop();
+F1 = Pop();
+F3 = F1 + F2;
+Push(F1);
+Push(F2);
+Push(F3);
+i++;
+}
+Display();
+return 0;
+}
+void Push(int Fib){
+if(S.Top == SIZE-1){
+printf("Stack is full");
+return;
+}else{
+S.Top++;
+S.Fib[S.Top] = Fib;
+return;
+}
+}
+int Pop(){
+int num;
+if(S.Top == -1){
+printf("StackEmpty");
+return 0;
+}else{
+num = S.Fib[S.Top];
+S.Top--;
+return num;
+}
+}
+void Display(){
+int i;
+if(S.Top == -1){
+printf("Stack Empty");
+return;
+}else{
+printf("Stack elements: ");
+for (i = 0; i <= S.Top; i++){
+printf("%d\t", S.Fib[i]);
+}
+printf("\n");
+}
+}
+void InitStack(){
+S.Top = -1;
+}
+FACTORIAL
+#include<stdio.h>
+#include<stdlib.h>
+#define SIZE 10
+typedef struct StackType{
+float Fact[SIZE];
+int Top;
+}STACK;
+STACK S;
+void Push(float F);
+float Pop();
+int main(){
+int i , n , num;
+float Fact;
+printf("Enter the value of n:");
+scanf("%d" , &n);
+i = 1;
+Push(1);
+while(i<=n){
+num = Pop();
+Push(num*i);
+i++;
+}
+Fact = Pop();
+printf("Factorial:%0.2f" , Fact);
+return 0;
+}
+void Push(float F){
+if(S.Top == SIZE-1){
+printf("Stack is full");
+return;
+}else{
+S.Top++;
+S.Fact[S.Top] = F;
+return;
+}
+}
+float Pop(){
+int num;
+if(S.Top == 0){
+printf("StackEmpty");
+return 0;
+}else{
+num = S.Fact[S.Top];
+S.Top--;
+return num;
+}
+}
+BRACKETS
+/*--------------------------------------------------------------------
+Bracket.c
+program using stack to check whether the bracket in an expression are correctly assigned
+Mohammed Adnan
+28-03-2022
+-------------------------------------------------------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 20
+typedef struct StackType{
+int Br[SIZE];
+int Top;
+}STACK;
+STACK S;
+void fnDisplayStack();
+int fnIsStackEmpty();
+void Push(int Num);
+int Pop();
+main()
+{
+int i,j,Ch,Bracket;
+char Str[20];
+S.Top=0;
+system("cls");
+printf("program using stack to check whether the bracket in an expression are correctly assigned\n");
+printf("Enter a string to test for bracket\n");
+gets(Str);
+fnDisplayStack();
+for(i=0; Str[i]!='\0'; i++){
+Ch= Str[i];
+if(Ch=='('){
+Push(Ch);
+}else if(Ch == ')'){
+Bracket = Pop();
+if (Bracket != '('){
+printf("NO PROPER BRACKET\n");
+return j;
+}
+}
+}
+if(fnIsStackEmpty()){
+printf("EXPRESSION IS WITH CORRECT NUMBER OF BRACKET\n");
+}else{
+printf("EXPRESSION IS WITHOUT PROPER BRACKETS\n");
+}
+}
+//--------------------display stack--------------------------//
+void fnDisplayStack()
+{
+int i;
+if(S.Top==0){
+}
+for(i=S.Top;i>=1;i--)
+{
+printf("%d",S.Br[i]);
+}
+}
+//------------------------stack empty-------------------------//
+int fnIsStackEmpty()
+{
+if(S.Top==0){
+return 1;
+}else{
+return 0;
+}
+}
+//--------------------push------------------------//
+void Push(int Num)
+{
+S.Top++;
+if(S.Top==SIZE){
+return;
+}else{
+S.Br[S.Top]=Num;
+}
+}
+//------------------pop---------------------------------//
+int Pop()
+{
+int Num;
+if(S.Top==0){
+return 0;
+}else{
+Num=S.Br[S.Top];
+S.Top--;
+return Num;
+}
+}
+BUBBLE SORT
+#include<stdio.h>
+#include<stdlib.h>
+void input(int n , int a[20]);
+void print(int n , int a[20]);
+void bubbleSort(int n , int a[20]);
+void main()
+{
+int n , a[20];
+printf("BUBBLE SORT:");
+printf("\nEnter the value of n:");
+scanf("%d" , &n);
+printf("\nEnter the elements:\n");
+input(n,a);
+bubbleSort(n,a);
+print(n,a);
+}
+void input(int n , int a[20]){
+for(int i = 0 ; i<n ; i++){
+scanf("%d" , &a[i]);
+}
+}
+void bubbleSort(int n , int a[20])
+{
+int temp;
+for(int i = 0; i<n-1 ;i++){
+for(int j = 0 ; j<n-i ; j++){
+if(a[j]>a[j+1]){
+temp = a[j];
+a[j] = a[j+1];
+a[j+1] = temp;
+}
+}
+}
+}
+void print(int n , int a[20])
+{
+for(int i = 0 ; i<n ; i++){
+printf("%d\t" , a[i]);
+}
+}
+SELECTION SORT
+/*----------------------------------------------------------------------------------------------------
+selectionsort.c
+A program in C to sort a list of numbers using SELECTION SORT techniques.
+Fr Denzil Lobo SJ
+19-09-2021
+--------------------------------------------------------------------------------------------------*/
+# include <stdio.h>
+# include <stdlib.h>
+//--------------------prototypes--------------------------------------
+void InputArray( int N, int A[20]);
+void PrintArray( int N, int A[20]);
+void SelectionSort( int N, int A[20]);
+main()
+{
+int X[10], N;
+printf("\t\t PROGRAM TO SORT A LIST OF NUMBERS USING SELECTION SORT\n\n");
+printf("How many numbers you want to input ? ");
+scanf("%d", &N);
+printf("Inpute %d numbers :\n ", N);
+InputArray( N, X);
+PrintArray(N, X);
+SelectionSort(N, X);
+printf("The SORTED data items using SELECTION SORT : \n");
+PrintArray(N,X);
+}
+void PrintArray( int N, int A[20] )
+{
+int i;
+for(i=1; i<=N; i++)
+printf("%d ", A[i]);
+printf("\n");
+}
+//------------------------------code for selection sort-------------------------------------------
+void SelectionSort( int N, int A[20] )
+{
+int i, j, Min, Loc;
+for(i=1; i<=N-1; i++){
+Min= A[i];
+Loc = i;
+for( j= i+1; j<=N; j++) {
+if( A[j]<Min){
+Min= A[j];
+Loc= j;
+}
+}
+A[Loc]= A[i];
+A[i]=Min;
+}
+}
+//--------------------------------------------------------------------------------
+void InputArray( int N, int A[20])
+{
+int i;
+for(i=1; i<=N; i++)
+scanf("%d", &A[i]);
+}
+LINEAR SEARCH
+/*Liner Search*/
+#include<stdio.h>
+#include<stdlib.h>
+/*--Function Prototype*/
+void Input(int n , int X[20]);
+int LinearSearch(int n , int X[20] , int num);
+int main()
+{
+int n , i , A[20] , num , result;
+printf("Enter the value of n:");
+scanf("%d" , &n);
+printf("Enter the elements:");
+Input(n,A);
+printf("Enter the number you want to search:");
+scanf("%d" , &num);
+result = LinearSearch(n,A,num);
+if(result == 1){
+printf("Number found");
+}else{
+printf("Number not found");
+}
+}
+void Input(int n , int X[20]){
+int i;
+for(i = 0 ; i<n ; i++){
+scanf("%d" , &X[i]);
+}
+}
+int LinearSearch(int n , int X[20] , int num){
+int i ;
+int Loc = -1;
+for(i = 0 ; i< n ; i++){
+if(X[i]==num){
+Loc = i;
+return 1;
+}
+}
+return Loc;
+}
+BINARY SEARCH
+/*Binary Search*/
+#include<stdio.h>
+#include<stdlib.h>
+int BinarySearch(int A[20],int num , int n);
+int main() {
+int A[20], n, i, num , result;
+printf("Enter the value of n: ");
+scanf("%d", &n);
+printf("Enter the elements: ");
+for (i = 0; i < n; i++) {
+scanf("%d", &A[i]);
+}
+printf("Enter the number you want to search: ");
+scanf("%d", &num);
+result = BinarySearch(A,num , n);
+if (result == 1) {
+printf("Number found ");
+} else {
+printf("Number not found\n");
+}
+return 0;
+}
+int BinarySearch(int A[20] , int num , int n){
+int Start , End , Found , Mid ;
+Start = 0;
+End = n - 1;
+Found = 0;
+while (Start <= End) {
+Mid = (Start + End) / 2;
+if (num == A[Mid]) {
+Found = 1;
+return 1;
+}
+if (num > A[Mid]) {
+Start = Mid + 1;
+} else {
+End = Mid - 1;
+}
+}
+return -1;
+}
+INSERTION SORT
+/*---------------------------------------------------------------------------------------------
+INSERTIONSORT.C
+Program to sort a list of numbers suing INSERTION SORT technique
+Denzil Lobo SJ
+05-08-2020
+----------------------------------------------------------------------------------------------*/
+# include <stdio.h>
+# include <stdlib.h>
+//----------------prototypes----------------------------
+void InputArray( int N, int A[20]);
+void PrintArray( int N, int A[20]);
+void InsertionSort(int N, int A[20]);
+int main()
+{
+int X[20], N;
+printf("Program to sort numbers using INSERTION SORT technique\n\n");
+printf("Enter the value of N : ");
+scanf("%d", &N);
+printf("Enter %d numbers into the array:\n ", N);
+InputArray(N, X);
+printf("The unsorted list of numbers\n ");
+PrintArray(N, X);
+printf("\n") ;
+InsertionSort( N, X);
+printf("\nThe sorted list of numbers \n");
+PrintArray(N, X);
+return 0;
+}
+//---------------code for InsertionSort()------------------------------------------------
+void InsertionSort( int N, int A[20])
+{
+int i, j, X;
+for( i=2 ;i <= N; i++){
+X = A[i];
+j = i-1;
+while( ( X < A[j] ) && ( j >= 1)){
+A[j+1] = A[j];
+j = j-1;
+}
+A[j+1]= X;
+}
+}
+//------------------------PrintArray()-------------------------------------------------------
+void PrintArray( int N, int A[20])
+{ int i;
+for(i=1; i<=N; i++)
+printf("%d\t", A[i]);
+}
+//------------------------------------------------------------------------------------------------
+void InputArray( int N, int A[20])
+{ int i;
+for(i=1; i<=N; i++)
+scanf("%d", &A[i]);
+}
