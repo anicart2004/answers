@@ -1,10 +1,8 @@
 # Menu Driven Program - Basics python
 print("1.Variables  2.Arithmetic  3.Relational  4.Logical")
 ch=int(input("Enter choice: "))
-
 name,age,height,is_student="Alwin",21,5.9,True
 a,b=10,3
-
 if ch==1:
     print("Name:",name,type(name))
     print("Age:",age,type(age))
