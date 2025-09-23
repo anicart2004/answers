@@ -1,4 +1,4 @@
-# Menu Driven Program - Basics python
+#1.Menu Driven Program - Basics python
 print("1.Variables  2.Arithmetic  3.Relational  4.Logical")
 ch=int(input("Enter choice: "))
 name,age,height,is_student="Alwin",21,5.9,True
@@ -16,3 +16,63 @@ elif ch==4:
     print("AND:",(a>5 and b<5)," OR:",(a>5 or b>5)," NOT:",not(a>b))
 else:
     print("Invalid")
+
+#2. control flow menu 
+print("=== Control Flow Menu ===")
+print("1. Check Positive/Negative/Zero")
+print("2. Print Numbers 1 to N")
+print("3. Find Square using Function")
+
+choice=int(input("Enter choice (1-3): "))
+
+if choice==1:
+    num=int(input("Enter number: "))
+    if num>0: print(num,"is Positive")
+    elif num==0: print("Number is Zero")
+    else: print(num,"is Negative")
+
+elif choice==2:
+    n=int(input("Enter limit N: "))
+    for i in range(1,n+1): print(i)
+
+elif choice==3:
+    def square(x): return x*x
+    n=int(input("Enter number: "))
+    print("Square of",n,"is",square(n))
+
+else: print("Invalid Choice")
+
+
+#3. Pandas Data Handling: Filter rows, Sort values, Handle missing values
+import pandas as pd
+df=pd.DataFrame({"Name":["Alice","Bob","Charlie","David","Eva"],
+                 "Age":[25,30,None,22,28],
+                 "Score":[85,None,90,70,88]})
+print("--- Original DataFrame ---\n",df)
+# Filter rows
+print("\n--- Filter rows (Age>25) ---\n",df[df["Age"]>25])
+# Sort values
+print("\n--- Sort values by Score(desc) ---\n",df.sort_values("Score",ascending=False))
+# Handle missing values
+print("\n--- Fill Missing Values ---\n",df.fillna({"Age":df["Age"].mean(),"Score":df["Score"].mean()}))
+print("\n--- Drop Rows with Missing Values ---\n",df.dropna())
+
+#4.# Pandas Data Handling: Filter rows, Sort values, Handle missing values
+import pandas as pd
+
+df=pd.DataFrame({"Name":["Alice","Bob","Charlie","David","Eva"],
+                 "Age":[25,30,None,22,28],
+                 "Score":[85,None,90,70,88]})
+print("--- Original DataFrame ---\n",df)
+
+# Filter rows
+print("\n--- Filter rows (Age>25) ---\n",df[df["Age"]>25])
+
+# Sort values
+print("\n--- Sort values by Score(desc) ---\n",df.sort_values("Score",ascending=False))
+
+# Handle missing values
+print("\n--- Fill Missing Values ---\n",df.fillna({"Age":df["Age"].mean(),"Score":df["Score"].mean()}))
+print("\n--- Drop Rows with Missing Values ---\n",df.dropna())
+
+
