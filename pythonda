@@ -1,1 +1,20 @@
+# Menu Driven Program - Basics python
+print("1.Variables  2.Arithmetic  3.Relational  4.Logical")
+ch=int(input("Enter choice: "))
 
+name,age,height,is_student="Alwin",21,5.9,True
+a,b=10,3
+
+if ch==1:
+    print("Name:",name,type(name))
+    print("Age:",age,type(age))
+    print("Height:",height,type(height))
+    print("Student:",is_student,type(is_student))
+elif ch==2:
+    print("Add:",a+b," Sub:",a-b," Mul:",a*b," Div:",a/b)
+elif ch==3:
+    print("a>b:",a>b," a==b:",a==b," a<b:",a<b)
+elif ch==4:
+    print("AND:",(a>5 and b<5)," OR:",(a>5 or b>5)," NOT:",not(a>b))
+else:
+    print("Invalid")
