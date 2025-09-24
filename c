@@ -1,4 +1,4 @@
-//link list_!
+//link list_1
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -590,7 +590,7 @@ void Display() {
 }
 
 
-//binary search tree 
+//5.......binary search tree 
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -746,7 +746,8 @@ int main() {
     return 0;
 }
 
-//6 working of stack 
+
+//................6 working of stack 
 #include <stdio.h>
 #define SIZE 5  // You can change stack size
 
@@ -916,7 +917,7 @@ int StackEmpty() {
 }
 
 
-//palindrome stack 8
+//.......palindrome stack 8
 #include <stdio.h>
 #include <string.h>
 #define MAX 50
@@ -959,7 +960,7 @@ int main() {
     return 0;
 }
 
-//9 fibonacci
+//............9 fibonacci
 #include<stdio.h>
 #include<stdlib.h>
 #define SIZE 20
@@ -1034,7 +1035,7 @@ S.Top = -1;
 
 
 
-//10. FACTORIAL
+//............10. FACTORIAL
 #include<stdio.h>
 #include<stdlib.h>
 #define SIZE 10
@@ -1081,7 +1082,7 @@ num = S.Fact[S.Top];
 S.Top--;
   
 
-//11.Bubble Sort for Numbers 
+//11. input some numbers into an array and sort them using BUBBLE SORT.
 #include <stdio.h>
 
 /* Function prototypes */
@@ -1138,6 +1139,7 @@ void displayArray(int arr[], int n) {
     }
     printf("\n");
 }
+
 
 //12//e strings into a character matrix and sort them using BUBBLE SORt )
 #include <stdio.h>
