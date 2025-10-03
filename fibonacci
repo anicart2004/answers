@@ -1,0 +1,74 @@
+#include <stdio.h>
+#define SIZE 100
+
+typedef struct {
+    int A[SIZE];
+    int Top;
+} STACK;
+
+STACK S;
+
+// Initialize stack
+void InitStack() {
+    S.Top = -1;
+}
+
+// Push function
+void Push(int Num) {
+    if (S.Top == SIZE - 1) {
+        printf("Stack is full\n");
+    } else {
+        S.Top++;
+        S.A[S.Top] = Num;
+    }
+}
+
+// Pop function
+int Pop() {
+    int Num;
+    if (S.Top == -1) {
+        printf("Stack Empty\n");
+        return -1;
+    } else {
+        Num = S.A[S.Top];
+        S.Top--;
+        return Num;
+    }
+}
+
+int main() {
+    int n, i;
+    int a = 0, b = 1, next;
+    int temp[SIZE];  // temporary array to store popped numbers
+
+    InitStack();
+
+    printf("Enter number of Fibonacci terms: ");
+    scanf("%d", &n);
+
+    // Generate Fibonacci numbers and push into stack
+    for (i = 0; i < n; i++) {
+        if (i == 0) next = a;
+        else if (i == 1) next = b;
+        else {
+            next = a + b;
+            a = b;
+            b = next;
+        }
+        Push(next);
+    }
+
+    // Pop all numbers into a temporary array
+    for (i = 0; i < n; i++) {
+        temp[i] = Pop();
+    }
+
+    // Print numbers in correct order
+    printf("Fibonacci numbers in correct order:\n");
+    for (i = n - 1; i >= 0; i--) {
+        printf("%d\t", temp[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
