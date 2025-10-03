@@ -3,14 +3,12 @@
 
 int n, a[20];
 
-// Function to input array elements
 void Input() {
     for (int i = 0; i < n; i++) {
         scanf("%d", &a[i]);
     }
 }
 
-// Function to print array
 void PrintArray() {
     for (int i = 0; i < n; i++) {
         printf("%d\t", a[i]);
@@ -18,7 +16,6 @@ void PrintArray() {
     printf("\n");
 }
 
-// Function to perform bubble sort
 void BubbleSort() {
     int i, j, temp;
     for (i = 0; i < n - 1; i++) {
@@ -38,15 +35,15 @@ int main() {
     scanf("%d", &n);
 
     printf("Enter %d elements:\n", n);
-    Input();                // Take input for the array
+    Input();                
 
     printf("Original Array:\n");
-    PrintArray();           // Print the original array
+    PrintArray();          
 
-    BubbleSort();           // Sort the array
+    BubbleSort();           
 
     printf("Sorted Array:\n");
-    PrintArray();           // Print the sorted array
+    PrintArray();         
 
     return 0;
 }
