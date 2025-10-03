@@ -8,7 +8,6 @@ typedef struct {
 
 STACK S;
 
-// Initialize stack
 void InitStack() {
     S.Top = -1;
 }
@@ -39,14 +38,14 @@ int Pop() {
 int main() {
     int n, i;
     int a = 0, b = 1, next;
-    int temp[SIZE];  // temporary array to store popped numbers
+    int temp[SIZE]; 
 
     InitStack();
 
     printf("Enter number of Fibonacci terms: ");
     scanf("%d", &n);
 
-    // Generate Fibonacci numbers and push into stack
+    //  push into stack
     for (i = 0; i < n; i++) {
         if (i == 0) next = a;
         else if (i == 1) next = b;
@@ -58,12 +57,11 @@ int main() {
         Push(next);
     }
 
-    // Pop all numbers into a temporary array
+    // Pop all
     for (i = 0; i < n; i++) {
         temp[i] = Pop();
     }
-
-    // Print numbers in correct order
+    //  correct order
     printf("Fibonacci numbers in correct order:\n");
     for (i = n - 1; i >= 0; i--) {
         printf("%d\t", temp[i]);
