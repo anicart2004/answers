@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <string.h>
+#define SIZE 100
+
+typedef struct {
+    char A[SIZE];
+    int Top;
+} STACK;
+
+STACK S;  
+
+void InitStack() {
+    S.Top = -1;
+}
+
+// Push function
+void Push(int Num) {
+    if (S.Top == SIZE - 1) {
+        printf("Stack is full\n");
+    } else {
+        S.Top++;
+        S.A[S.Top] = Num;
+    }
+}
+// Pop 
+int Pop() {
+    int Num;
+    if (S.Top == -1) {
+        printf("Stack Empty\n");
+        return -1;
+    } else {
+        Num = S.A[S.Top];
+        S.Top--;
+        return Num;
+    }
+}
+
+int main() {
+    char str[SIZE], rev[SIZE];
+    int i, len;
+
+    InitStack();
+
+    printf("Enter a string: ");
+    scanf("%s", str);
+
+    len = strlen(str);
+
+    // Push all characters
+    for (i = 0; i < len; i++) {
+        Push(str[i]);   
+    }
+
+    // Pop to form reverse
+    for (i = 0; i < len; i++) {
+        rev[i] = (char)Pop();   
+    }
+    rev[len] = '\0';
+    
+    //compare
+    if (strcmp(str, rev) == 0) {
+        printf("%s is a Palindrome\n", str);
+    } else {
+        printf("%s is NOT a Palindrome\n", str);
+    }
+
+    return 0;
+} 
