@@ -1,0 +1,60 @@
+#include <stdio.h>
+#define SIZE 100
+
+typedef struct {
+    int A[SIZE];
+    int Top;
+} STACK;
+
+STACK S;
+
+// Initialize stack
+void InitStack() {
+    S.Top = -1;
+}
+
+// Push function
+void Push(int Num) {
+    if (S.Top == SIZE - 1) {
+        printf("Stack is full\n");
+    } else {
+        S.Top++;
+        S.A[S.Top] = Num;
+    }
+}
+
+// Pop function
+int Pop() {
+    int Num;
+    if (S.Top == -1) {
+        printf("Stack Empty\n");
+        return -1;
+    } else {
+        Num = S.A[S.Top];
+        S.Top--;
+        return Num;
+    }
+}
+
+int main() {
+    int n, i, result = 1;
+
+    InitStack();
+
+    printf("Enter a number to find factorial: ");
+    scanf("%d", &n);
+
+    // Push all numbers from 1 to n into stack
+    for (i = 1; i <= n; i++) {
+        Push(i);
+    }
+
+    // Pop numbers from stack and multiply
+    for (i = 1; i <= n; i++) {
+        result *= Pop();
+    }
+
+    printf("Factorial of %d is: %d\n", n, result);
+
+    return 0;
+}
