@@ -8,7 +8,6 @@ typedef struct {
 
 STACK S;
 
-// Initialize stack
 void InitStack() {
     S.Top = -1;
 }
