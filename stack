@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 10
+
+typedef struct {
+    int A[SIZE];
+    int Top;
+} STACK;
+STACK S;
+
+void InitStack() {
+    S.Top = -1;
+}
+void Push(int Num) {
+    if (S.Top == SIZE - 1) {
+        printf("Stack is full\n");
+    } else {
+        S.Top++;
+        S.A[S.Top] = Num;
+    }
+}
+int Pop() {
+    int Num;
+    if (S.Top == -1) {
+        printf("Stack Empty\n");
+        return -1;
+    } else {
+        Num = S.A[S.Top];
+        S.Top--;
+        return Num;
+    }
+}
+void Display() {
+    int i;
+    if (S.Top == -1) {
+        printf("Stack Empty\n");
+    } else {
+        printf("Stack elements: ");
+        for (i = S.Top; i >= 0; i--) {
+            printf("%d\t", S.A[i]);
+        }
+        printf("\n");
+    }
+}
+int main() {
+    int choice, Num, Popped, N, i;
+    InitStack();
+    while (1) {
+        printf("\n1.Push numbers  2.Pop  3.Display  4.Exit\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:  // Push numbers
+                printf("Enter the number of elements to push: ");
+                scanf("%d", &N);
+                for (i = 0; i < N; i++) {
+                    printf("Enter number %d: ", i + 1);
+                    scanf("%d", &Num);
+                    Push(Num);
+                }
+                break;
+
+            case 2:
+                Popped = Pop();
+                if (Popped != -1)
+                    printf("%d is popped\n", Popped);
+                break;
+
+            case 3:
+                Display();
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
