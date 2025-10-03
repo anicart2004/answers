@@ -9,12 +9,10 @@ typedef struct {
 
 STACK s;
 
-// Initialize stack
 void InitStack() {
     s.Top = -1;
 }
-
-// Push function (exact style as your factorial code)
+// Push 
 void Push(char c) {
     if (s.Top == SIZE - 1) {
         printf("Stack is full\n");
@@ -23,8 +21,7 @@ void Push(char c) {
         s.A[s.Top] = c;
     }
 }
-
-// Pop function (exact style as your factorial code)
+// Pop 
 char Pop() {
     char c;
     if (s.Top == -1) {
@@ -36,8 +33,7 @@ char Pop() {
         return c;
     }
 }
-
-// Balanced function (short version)
+// Balanced 
 int balanced(char a[]) {
     InitStack();
     for (int i = 0; a[i]; i++) {
@@ -53,7 +49,6 @@ int balanced(char a[]) {
 
 int main() {
     char a[SIZE];
-
     printf("Enter expression: ");
     scanf("%s", a);
 
