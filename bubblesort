@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int n, a[20];
+
+// Function to input array elements
+void Input() {
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &a[i]);
+    }
+}
+
+// Function to print array
+void PrintArray() {
+    for (int i = 0; i < n; i++) {
+        printf("%d\t", a[i]);
+    }
+    printf("\n");
+}
+
+// Function to perform bubble sort
+void BubbleSort() {
+    int i, j, temp;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (a[j] > a[j + 1]) {
+                temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+            }
+        }
+    }
+}
+int main() {
+    printf("BUBBLE SORT PROGRAM\n");
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter %d elements:\n", n);
+    Input();                // Take input for the array
+
+    printf("Original Array:\n");
+    PrintArray();           // Print the original array
+
+    BubbleSort();           // Sort the array
+
+    printf("Sorted Array:\n");
+    PrintArray();           // Print the sorted array
+
+    return 0;
+}
