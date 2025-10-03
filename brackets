@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <string.h>
+#define SIZE 100
+
+typedef struct {
+    char A[SIZE];
+    int Top;
+} STACK;
+
+STACK s;
+
+// Initialize stack
+void InitStack() {
+    s.Top = -1;
+}
+
+// Push function (exact style as your factorial code)
+void Push(char c) {
+    if (s.Top == SIZE - 1) {
+        printf("Stack is full\n");
+    } else {
+        s.Top++;
+        s.A[s.Top] = c;
+    }
+}
+
+// Pop function (exact style as your factorial code)
+char Pop() {
+    char c;
+    if (s.Top == -1) {
+        printf("Stack Empty\n");
+        return '\0';  // Empty stack
+    } else {
+        c = s.A[s.Top];
+        s.Top--;
+        return c;
+    }
+}
+
+// Balanced function (short version)
+int balanced(char a[]) {
+    InitStack();
+    for (int i = 0; a[i]; i++) {
+        if (a[i]=='('||a[i]=='{'||a[i]=='[') Push(a[i]);
+        else if (a[i]==')'||a[i]=='}'||a[i]==']') {
+            char t = Pop();
+            if ((a[i]==')'&&t!='(')||(a[i]=='}'&&t!='{')||(a[i]==']'&&t!='['))
+                return 0;
+        }
+    }
+    return s.Top == -1;
+}
+
+int main() {
+    char a[SIZE];
+
+    printf("Enter expression: ");
+    scanf("%s", a);
+
+    if (balanced(a))
+        printf("Balanced Brackets\n");
+    else
+        printf("Not Balanced\n");
+
+    return 0;
+}
+    
