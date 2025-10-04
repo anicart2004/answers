@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+// Function to search number in array
+int fnSearchNum(int N, int A[20], int Num) {
+    for (int i = 0; i < N; i++) {
+        if (A[i] == Num) {
+            return 1;  // Number found
+        }
+    }
+    return -1;  // Number not found
+}
+
+int main() {
+    int N, A[20], Num, result;
+
+    // Input array size
+    printf("Enter number of elements: ");
+    scanf("%d", &N);
+
+    // Input array elements
+    printf("Enter %d elements:\n", N);
+    for (int i = 0; i < N; i++) {
+        scanf("%d", &A[i]);
+    }
+
+    // Input number to search
+    printf("Enter number to search: ");
+    scanf("%d", &Num);
+
+    // Call the search function
+    result = fnSearchNum(N, A, Num);
+
+    // Display result
+    if (result == 1) {
+        printf("%d is FOUND in the array.\n", Num);
+    } else {
+        printf("%d is NOT FOUND in the array.\n", Num);
+    }
+
+    return 0;
+}
