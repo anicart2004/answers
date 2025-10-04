@@ -1,0 +1,191 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct ListNode {
+int data;
+struct ListNode *next;
+} LISTNODE;
+LISTNODE *Head = NULL;
+// Function Prototypes
+void InsertNode(int num);
+void DisplayList();
+void DeleteFirst();
+void DeleteLast();
+int CountNodes();
+int FindMax();
+LISTNODE* SearchNode(int num);
+void DeleteNode(int num);
+int main() {
+int choice, num;
+while (1) {
+printf("\n--- LINKED LIST MENU ---\n");
+printf("1. Input a number into the linked list\n");
+printf("2. Print the content of the linked list\n");
+printf("3. Delete the first node\n");
+printf("4. Delete the last node\n");
+printf("5. Display the number of nodes\n");
+printf("6. Display the maximum number\n");
+printf("7. Search for a given number\n");
+printf("8. Delete a given number\n");
+printf("9. EXIT\n");
+printf("Enter your choice: ");
+scanf("%d", &choice);
+switch(choice) {
+case 1:
+printf("Enter number to insert: ");
+scanf("%d", &num);
+InsertNode(num);
+break;
+case 2:
+DisplayList();
+break;
+case 3:
+DeleteFirst();
+break;
+case 4:
+DeleteLast();
+break;
+case 5:
+printf("Number of nodes: %d\n", CountNodes());
+break;
+case 6:
+printf("Maximum number: %d\n", FindMax());
+break;
+case 7:
+printf("Enter number to search: ");
+scanf("%d", &num);
+if (SearchNode(num) != NULL)
+printf("%d is present in the list\n", num);
+else
+printf("%d is NOT present in the list.\n", num);
+break;
+case 8:
+printf("Enter number to delete: ");
+scanf("%d", &num);
+DeleteNode(num);
+break;
+case 9:
+printf("Exiting...\n");
+exit(0);
+default:
+printf("Invalid choice! Try again.\n");
+}
+}
+return 0;
+}
+// Insert at end
+void InsertNode(int num) {
+LISTNODE newNode = (LISTNODE)malloc(sizeof(LISTNODE));
+newNode->data = num;
+newNode->next = NULL;
+if (Head == NULL) {
+Head = newNode;
+return;
+}
+LISTNODE *temp = Head;
+while (temp->next != NULL)
+temp = temp->next;
+temp->next = newNode;
+}
+// Display list
+void DisplayList() {
+if (Head == NULL) {
+printf("List is empty.\n");
+return;
+}
+LISTNODE *temp = Head;
+while (temp != NULL) {
+printf("%d -> ", temp->data);
+temp = temp->next;
+}
+printf("NULL\n");
+}
+// Delete first node
+void DeleteFirst() {
+if (Head == NULL) {
+printf("List is empty.\n");
+return;
+}
+LISTNODE *temp = Head;
+Head = Head->next;
+free(temp);
+printf("First node deleted.\n");
+}
+// Delete last node
+void DeleteLast() {
+if (Head == NULL) {
+printf("List is empty.\n");
+return;
+}
+if (Head->next == NULL) { // only one node
+free(Head);
+Head = NULL;
+printf("Last node deleted.\n");
+return;
+}
+LISTNODE *temp = Head;
+while (temp->next->next != NULL)
+temp = temp->next;
+free(temp->next);
+temp->next = NULL;
+printf("Last node deleted.\n");
+}
+// Count nodes
+int CountNodes() {
+int count = 0;
+LISTNODE *temp = Head;
+while (temp != NULL) {
+count++;
+temp = temp->next;
+}
+return count;
+}
+// Find maximum
+int FindMax() {
+if (Head == NULL) {
+printf("List is empty.\n");
+return -1;
+}
+int max = Head->data;
+LISTNODE *temp = Head->next;
+while (temp != NULL) {
+if (temp->data > max)
+max = temp->data;
+temp = temp->next;
+}
+return max;
+}
+// Search node
+LISTNODE* SearchNode(int num) {
+LISTNODE *temp = Head;
+while (temp != NULL) {
+if (temp->data == num)
+return temp;
+temp = temp->next;
+}
+return NULL;
+}
+// Delete a given node
+void DeleteNode(int num) {
+if (Head == NULL) {
+printf("List is empty.\n");
+return;
+}
+if (Head->data == num) {
+LISTNODE *temp = Head;
+Head = Head->next;
+free(temp);
+printf("%d deleted from the list.\n", num);
+return;
+}
+LISTNODE *temp = Head;
+while (temp->next != NULL && temp->next->data != num)
+temp = temp->next;
+if (temp->next == NULL) {
+printf("%d not found in the list.\n", num);
+return;
+}
+LISTNODE *delNode = temp->next;
+temp->next = delNode->next;
+free(delNode);
+printf("%d deleted from the list.\n", num);
