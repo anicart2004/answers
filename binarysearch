@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+// Function for Binary Search
+// Returns 1 if found, -1 if not found
+int fnSearchNum(int N, int A[20], int Num) {
+    int low = 0, high = N - 1, mid;
+
+    while (low <= high) {
+        mid = (low + high) / 2;
+
+        if (A[mid] == Num)
+            return 1; // Number found
+        else if (A[mid] < Num)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return -1; // Number not found
+}
+
+int main() {
+    int N, A[20], Num, result;
+
+    // Input array size
+    printf("Enter number of elements: ");
+    scanf("%d", &N);
+
+    // Input array elements (must be sorted for binary search)
+    printf("Enter %d elements in sorted order:\n", N);
+    for (int i = 0; i < N; i++) {
+        scanf("%d", &A[i]);
+    }
+
+    // Input number to search
+    printf("Enter number to search: ");
+    scanf("%d", &Num);
+
+    // Call the search function
+    result = fnSearchNum(N, A, Num);
+
+    // Display result
+    if (result == 1)
+        printf("%d is FOUND in the array.\n", Num);
+    else
+        printf("%d is NOT FOUND in the array.\n", Num);
+
+    return 0;
+}
