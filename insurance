@@ -1,0 +1,25 @@
+
+(iii) Demonstrate how you can;
+
+a. update the cost of damage for the car that met with accident in report no. 12 as Rs 25000 along with the register number.
+UPDATE PARTICIPATED
+SET DAMAGE_AMOUNT = 25000
+WHERE REPORT_NO = 12;
+ b. Add a new accident happened into the database.
+INSERT INTO ACCIDENT VALUES (15, TO_DATE('2023-10-09', 'YYYY-MM-DD'), 'Chennai');
+INSERT INTO PARTICIPATED VALUES ('D001', 'TN01AB1234', 15, 30000);
+
+(iv) Find the total number of people who owned cars that were involved in accidents in 2022
+SELECT COUNT(DISTINCT O.DRIVER_IDNO) AS TOTAL_OWNERS
+FROM OWNS O
+JOIN PARTICIPATED P ON O.REGNO = P.REGNO
+JOIN ACCIDENT A ON P.REPORT_NO = A.REPORT_NO
+WHERE EXTRACT(YEAR FROM A.ADATE) = 2022;
+
+(v) Find the number of accidents in which cars of a specific model were involved.
+SELECT C.MODEL, COUNT(DISTINCT A.REPORT_NO) AS TOTAL_ACCIDENTS
+FROM CAR C
+JOIN PARTICIPATED P ON C.REGNO = P.REGNO
+JOIN ACCIDENT A ON P.REPORT_NO = A.REPORT_NO
+WHERE C.MODEL = 'Swift'
+GROUP BY C.MODEL;
