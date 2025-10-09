@@ -1,0 +1,34 @@
+(iii) Demonstrate how you can add a new textbook to the database and have this book adopted by a department.
+
+#Insert a new textbook into the TEXT table
+INSERT INTO TEXT (book_isbn, book_title, publisher, author)
+VALUES (&book_isbn, '&book_title', '&publisher', '&author');
+
+#Adopt the textbook for a course in BOOK_ADOPTION table
+INSERT INTO BOOK_ADOPTION (course_no, sem, book_isbn)
+VALUES (&course_no, &sem, &book_isbn);
+
+
+
+(iv) Produce a list of textbooks (include course-no, book_isbn, book-title) in alphabetical order for courses offered by the 'Computer Science' department that use more than two books.
+SELECT B.course_no, T.book_isbn, T.book_title
+FROM BOOK_ADOPTION B
+JOIN COURSE C ON B.course_no = C.course_no
+JOIN TEXT T ON B.book_isbn = T.book_isbn
+WHERE C.dept = 'Computer Science'
+AND B.course_no IN (
+    SELECT course_no
+    FROM BOOK_ADOPTION
+    GROUP BY course_no
+    HAVING COUNT(book_isbn) > 2
+)
+ORDER BY T.book_title;
+
+v) List any department that has all its adopted books published by a specific publisher.
+SELECT C.dept
+FROM COURSE C
+JOIN BOOK_ADOPTION B ON C.course_no = B.course_no
+JOIN TEXT T ON B.book_isbn = T.book_isbn
+GROUP BY C.dept
+HAVING COUNT(*) = COUNT(CASE WHEN T.publisher = 'Pearson' THEN 1 END);
+
