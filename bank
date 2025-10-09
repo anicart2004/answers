@@ -1,0 +1,31 @@
+
+(iii) Find all the customers who have atleast two accounts at the main branch.
+
+SELECT D.CUSTOMER_NAME, COUNT(D.ACCNO) AS TOTAL_ACCOUNTS
+FROM DEPOSITOR D
+JOIN ACCOUNT A ON D.ACCNO = A.ACCNO
+WHERE A.BRANCH_NAME = 'Main'
+GROUP BY D.CUSTOMER_NAME
+HAVING COUNT(D.ACCNO) >= 2;
+
+
+(iv) Find all the customers who have accounts at all the branches located in the specific city.
+
+SELECT D.CUSTOMER_NAME
+FROM DEPOSITOR D
+JOIN ACCOUNT A ON D.ACCNO = A.ACCNO
+JOIN BRANCH B ON A.BRANCH_NAME = B.BRANCH_NAME
+WHERE B.BRANCH_CITY = 'Chennai'
+GROUP BY D.CUSTOMER_NAME
+HAVING COUNT(D.ACCNO) = (SELECT COUNT(*) FROM BRANCH WHERE BRANCH_CITY = 'Chennai');
+
+(v) Demonstrate how to delete all account tuples at every branch located in the specific city
+
+DELETE FROM ACCOUNT
+WHERE BRANCH_NAME IN (
+    SELECT BRANCH_NAME
+    FROM BRANCH
+    WHERE BRANCH_CITY = 'Mumbai'
+);
+
+
