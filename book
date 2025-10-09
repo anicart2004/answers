@@ -1,0 +1,27 @@
+
+(iii)Give the details of the authors who have 2 or more books in the catalog and the price of the books is greater than the average price of the books in the catalog and the year of publication after 2010.
+SELECT A.AUTHOR_ID, A.NAME, COUNT(C.BOOK_ID) AS NO_OF_BOOKS
+FROM AUTHOR A
+JOIN CATLOG C ON A.AUTHOR_ID = C.AUTHOR_ID
+WHERE C.PRICE > (SELECT AVG(PRICE) FROM CATLOG)
+AND C.YEAR > 2010
+GROUP BY A.AUTHOR_ID, A.NAME
+HAVING COUNT(C.BOOK_ID) >= 2;
+
+
+iv) Find the author of the book that has maximum sales.
+
+SELECT A.NAME, C.TITLE, O.QUANTITY
+FROM ORDER_DETAILS O
+JOIN CATLOG C ON O.BOOK_ID = C.BOOK_ID
+JOIN AUTHOR A ON C.AUTHOR_ID = A.AUTHOR_ID
+WHERE O.QUANTITY = (SELECT MAX(QUANTITY) FROM ORDER_DETAILS);
+
+
+
+(v) Demonstrate how to increase the price of the books published by the specific publisher by 10%
+UPDATE CATLOG
+SET PRICE = PRICE * 1.10
+WHERE PUBLISHER_ID = 1;
+
+
