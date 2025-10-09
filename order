@@ -1,0 +1,23 @@
+
+(iii) List the order number and shipping date for all orders that were shipped from the particular warehouse.
+
+SELECT ORDERNO, SHIP_DATE
+FROM SHIPMENT
+WHERE WAREHOUSENO = 1;  -- example: warehouse no 1 (Chennai)
+
+
+(iv) Produce a list of customer details with their name, no. of orders and the average order amount.
+SELECT C.CUSTNO, C.CNAME, COUNT(O.ORDERNO) AS TOTAL_ORDERS,
+       AVG(O.ORD_AMT) AS AVG_AMOUNT
+FROM CUSTOMER C
+JOIN "ORDER" O ON C.CUSTNO = O.CUSTNO
+GROUP BY C.CUSTNO, C.CNAME;
+
+
+(v) List the orders that were not shipped within 30 days from the date of ordering.
+
+SELECT O.ORDERNO, O.ODATE, S.SHIP_DATE
+FROM "ORDER" O
+JOIN SHIPMENT S ON O.ORDERNO = S.ORDERNO
+WHERE S.SHIP_DATE > O.ODATE + 30;
+S
